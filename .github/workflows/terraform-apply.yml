@@ -1,0 +1,65 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform-apply.yml'
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: terraform-apply
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: eu-west-1
+  TERRAFORM_VERSION: '1.15.8'
+  TF_IN_AUTOMATION: 'true'
+  TF_INPUT: 'false'
+
+defaults:
+  run:
+    working-directory: ./terraform
+
+jobs:
+  apply:
+    name: apply
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Assume AWS role via OIDC
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: arn:aws:iam::286325277771:role/GitHubActionsRole
+          role-session-name: gha-terraform-apply-${{ github.run_id }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+
+      - name: Initialise backend
+        run: terraform init -lockfile=readonly
+
+      - name: Apply configuration
+        run: terraform apply -auto-approve
+
+      - name: Publish outputs to job summary
+        if: success()
+        run: |
+          {
+            printf '## Applied — Network Outputs\n\n'
+            printf '```json\n'
+            terraform output -json
+            printf '\n```\n'
+          } >> "$GITHUB_STEP_SUMMARY"
