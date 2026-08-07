@@ -1,0 +1,24 @@
+# State — never commit
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.tfstate.lock.info
+
+# Variable files may contain secrets
+*.tfvars
+*.tfvars.json
+!example.tfvars
+
+# Plan artifacts
+tfplan
+*.tfplan
+plan.txt
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Editor and OS
+.DS_Store
+.idea/
+.vscode/
