@@ -52,6 +52,8 @@ jobs:
         run: terraform init -lockfile=readonly
 
       - name: Apply configuration
+        env:
+          TF_VAR_github_token: ${{ secrets.GH_PAT_TOKEN }}
         run: terraform apply -auto-approve
 
       - name: Publish outputs to job summary

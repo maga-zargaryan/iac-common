@@ -21,3 +21,15 @@ variable "hosted_zone_id" {
   type        = string
   default     = "Z08564813V58TNSVCWMOQ"
 }
+
+variable "github_repository" {
+  description = "Repository holding this configuration."
+  type        = string
+  default     = "iac-common"
+}
+
+variable "github_token" {
+  description = "Fine-grained PAT for the github provider. Supplied via TF_VAR_github_token."
+  type        = string
+  sensitive   = true
+}
