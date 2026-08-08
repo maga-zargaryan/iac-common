@@ -60,6 +60,8 @@ jobs:
 
       - name: Generate plan
         id: plan
+        env:
+          TF_VAR_github_token: ${{ secrets.GH_PAT_TOKEN }}
         run: |
           set -o pipefail
           terraform plan -out=tfplan -no-color | tee plan.txt

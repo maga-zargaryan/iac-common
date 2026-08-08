@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.61.0"
     }
+    github = {
+      source  = "integrations/github"
+      version = "6.2.3"
+    }
   }
 }
 
@@ -20,4 +24,8 @@ provider "aws" {
       Owner      = var.owner
     }
   }
+}
+
+provider "github" {
+  token = var.github_token
 }
