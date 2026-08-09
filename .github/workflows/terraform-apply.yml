@@ -70,10 +70,10 @@ jobs:
         if: always()
         uses: slackapi/slack-github-action@v1.26.0
         with:
-            payload: |
+          payload: |
             {
-                "text": "*iac-common ${{ matrix.stack }}* — `${{ job.status }}`\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "text": "*iac-common ${{ matrix.stack }}* — `${{ job.status }}`\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
