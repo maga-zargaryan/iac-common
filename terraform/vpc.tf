@@ -22,13 +22,39 @@ module "vpc" {
   database_subnet_names = ["data-1a", "data-1b"]
 
   create_database_subnet_route_table = true
+  create_database_subnet_group       = true
+  database_subnet_group_name         = "data-subnets"
 
-  create_database_subnet_group = true
-  database_subnet_group_name   = "data-subnets"
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
+  enable_nat_gateway = false
 
   enable_dns_hostnames = true
   enable_dns_support   = true
+}
+
+resource "aws_subnet" "build_1a" {
+  vpc_id            = module.vpc.vpc_id
+  cidr_block        = "10.0.10.0/24"
+  availability_zone = "${var.aws_region}a"
+
+  tags = {
+    Name = "ephem-build-1a"
+  }
+}
+
+resource "aws_route_table" "build_rt" {
+  vpc_id = module.vpc.vpc_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = module.vpc.igw_id
+  }
+
+  tags = {
+    Name = "net-rt-build"
+  }
+}
+
+resource "aws_route_table_association" "build_assoc" {
+  subnet_id      = aws_subnet.build_1a.id
+  route_table_id = aws_route_table.build_rt.id
 }

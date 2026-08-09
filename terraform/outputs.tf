@@ -28,14 +28,14 @@ output "database_subnet_group_name" {
   value       = module.vpc.database_subnet_group_name
 }
 
-output "nat_public_ips" {
-  description = "NAT Gateway Elastic IPs — for third-party allowlisting."
-  value       = module.vpc.nat_public_ips
+output "build_subnet_id" {
+  description = "Ephemeral build subnet for EC2 Image Builder."
+  value       = aws_subnet.build_1a.id
 }
 
-output "availability_zones" {
-  description = "Availability zones this VPC spans."
-  value       = local.azs
+output "vpc_endpoint_security_group_id" {
+  description = "Security group ID attached to the private endpoints."
+  value       = aws_security_group.vpc_endpoints.id
 }
 
 output "route53_zone_id" {
